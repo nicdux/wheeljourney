@@ -1,0 +1,364 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <!--
+    Portal Rodas – Launcher (SSO com Microsoft Entra External ID)
+    - App principal (PoC-Rodas-App): onboarding (primeiro login)
+    - Submódulos (Rodas-App2, Rodas-App3): acesso via SSO após onboarding
+    - URLs /authorize sem prompt=login (para não forçar nova autenticação)
+    - Redirect para https://jwt.ms (decodifica id_token automaticamente)
+
+    Atenção:
+    - Este arquivo é para DEMO. Em produção, use Authorization Code + PKCE no seu app.
+    - Substitua as cores abaixo pelos hex oficiais do Banco Votorantim (BV) quando desejar.
+  -->
+  <meta charset="utf-8" />
+  <title>Portal Rodas – Launcher (SSO com External ID)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- ======= PALETA (BV / Votorantim – aproximada) ======= -->
+  <style>
+    :root {
+      /* Base (fundo) – roxo profundo BV */
+      --bg-1: #0D0B1E;     /* fundo page */
+      --bg-2: #171433;     /* painel fundo */
+      --bg-3: #1F1B47;     /* cards */
+
+      /* Acentos – roxo/indigo BV */
+      --indigo: #3E2C7D;
+      --violet: #5A40A1;
+      --violet-strong: #6E51C2;
+
+      /* Destaques – magenta/ciano (toques modernos) */
+      --magenta: #E0007A;
+      --cyan:    #46C2CC;
+
+      /* Texto */
+      --text:     #E8E6F3;
+      --text-2:   #C1BED6;
+      --text-soft:#A4A0C0;
+
+      /* Bordas e sombras */
+      --border: #2B2756;
+      --shadow: rgba(0,0,0,.35);
+
+      /* Botões */
+      --btn-bg:     var(--violet);
+      --btn-bg-hov: var(--violet-strong);
+      --btn-txt:    #FFFFFF;
+      --btn-sec-bg: #273053;
+      --btn-sec-txt:#D9E4FF;
+
+      /* Estados */
+      --ok:    #57E39B;
+      --warn:  #FFD166;
+      --error: #FF6B6B;
+    }
+
+    /* ======= RESET/BASE ======= */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 10% 10%, #130f3a 0%, transparent 55%),
+        radial-gradient(1000px 600px at 90% 20%, #1a154d 0%, transparent 60%),
+        linear-gradient(180deg, var(--bg-1), #0A0916 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .wrap { width: 100%; max-width: 1080px; padding: 28px; }
+
+    /* ======= HEADER ======= */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 22px;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 14px;
+    }
+    .logo {
+      width: 60px; height: 60px; border-radius: 14px;
+      background: linear-gradient(145deg, var(--violet), var(--indigo));
+      display: grid; place-items: center;
+      box-shadow: 0 8px 28px var(--shadow);
+    }
+    .logo svg { width: 38px; height: 38px; }
+    .titles h1 { margin: 0; font-size: 22px; letter-spacing: .2px; }
+    .titles p  { margin: 6px 0 0; font-size: 13px; color: var(--text-2); }
+
+    .actions-top { display: flex; gap: 10px; }
+    .btn {
+      appearance: none; border: none; cursor: pointer;
+      background: var(--btn-bg); color: var(--btn-txt);
+      padding: 10px 14px; border-radius: 12px; font-weight: 600;
+      box-shadow: 0 6px 18px var(--shadow);
+      transition: filter .2s ease;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn.sec { background: var(--btn-sec-bg); color: var(--btn-sec-txt); }
+
+    /* ======= GRID DE APPS ======= */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .card {
+      background: linear-gradient(180deg, var(--bg-3), #151233);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px;
+      box-shadow: 0 8px 30px var(--shadow);
+      display: flex; flex-direction: column; gap: 12px;
+      position: relative; overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute; right: -30px; top: -30px;
+      width: 140px; height: 140px; border-radius: 50%;
+      background: radial-gradient(closest-side, rgba(224,0,122,.25), transparent);
+      filter: blur(4px);
+    }
+    .card-head {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .card-ico {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(180deg, #28234f, #1f1a45);
+      border: 1px solid #2e2a62;
+      display: grid; place-items: center;
+    }
+    .card-ico svg { width: 24px; height: 24px; }
+    .card h3 { margin: 0; font-size: 16px; letter-spacing: .2px; }
+    .card p  { margin: 0; font-size: 12px; color: var(--text-soft); min-height: 28px; }
+
+    .card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .url {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+      font-size: 11px; color: var(--text-2);
+      background: #0f0c2e; border: 1px solid #241f55;
+      padding: 8px; border-radius: 10px;
+      word-break: break-all;
+    }
+
+    /* ======= STATUS ======= */
+    .status {
+      margin-top: 18px;
+      background: linear-gradient(180deg, var(--bg-2), #12102a);
+      border: 1px solid var(--border); border-radius: 16px; padding: 16px;
+    }
+    .kpis {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .kpi {
+      background: #0e0c29; border: 1px solid #211d4f;
+      border-radius: 12px; padding: 12px;
+    }
+    .kpi h4 { margin: 0; font-size: 12px; color: var(--text-soft); }
+    .kpi p  {
+      margin: 4px 0 0; font-size: 13px; font-weight: 700;
+      font-family: ui-monospace, Menlo, Consolas, 'Liberation Mono', monospace;
+    }
+    .tips { margin-top: 10px; font-size: 12px; color: var(--text-soft); }
+
+    /* ======= RESPONSIVO ======= */
+    @media (max-width: 980px) {
+      .grid { grid-template-columns: 1fr; }
+      .actions-top { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main" aria-label="Portal Rodas – Launcher">
+    <!-- ======= CABEÇALHO ======= -->
+    <header class="header">
+      <div class="brand">
+        <!-- Ícone/Logo “ID” (SVG) -->
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M10 8v8M14 8c2 0 2 8 0 8"></path>
+          </svg>
+        </div>
+        <div class="titles">
+          <h1>Portal Rodas</h1>
+          <p>Onboarding + SSO (Microsoft Entra External ID)</p>
+        </div>
+      </div>
+      <div class="actions-top">
+        <!-- Logout global -->
+        <button class="btn sec" id="btnLogout">Sair</button>
+        <!-- Copiar URLs de todos os apps -->
+        <button class="btn" id="btnCopyAll">Copiar URLs</button>
+      </div>
+    </header>
+
+    <!-- ======= GRID DE APPS ======= -->
+    <section class="grid" aria-label="Aplicativos Rodas">
+      <!-- APP 1 – ONBOARDING (PoC-Rodas-App) -->
+      <article class="card" aria-label="Onboarding">
+        <div class="card-head">
+          <div class="card-ico" aria-hidden="true">
+            <!-- Ícone volante (Steering Wheel) -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"></circle>
+              <path d="M7 12h10M12 12l-3 5M12 12l3 5M12 7l0 2"></path>
+            </svg>
+          </div>
+          <h3>Onboarding</h3>
+        </div>
+        <!-- Texto mínimo: instrução simples -->
+        <p>Entre aqui primeiro (CPF). Depois acesse os demais sem nova senha.</p>
+        <div class="card-actions">
+          <button class="btn" onclick="openAuth('app1')">Entrar</button>
+          <button class="btn sec" onclick="copyUrl('app1')">Copiar URL</button>
+        </div>
+        <div class="url" id="url-app1" aria-live="polite"></div>
+      </article>
+
+      <!-- APP 2 – ESTOQUE -->
+      <article class="card" aria-label="Estoque">
+        <div class="card-head">
+          <div class="card-ico" aria-hidden="true">
+            <!-- Ícone caixas -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l8 4-8 4-8-4 8-4z"></path>
+              <path d="M4 7v6l8 4 8-4V7"></path>
+            </svg>
+          </div>
+          <h3>Estoque</h3>
+        </div>
+        <p>SSO ativo quando a sessão já existe no domínio do tenant.</p>
+        <div class="card-actions">
+          <button class="btn" onclick="openAuth('app2')">Entrar</button>
+          <button class="btn sec" onclick="copyUrl('app2')">Copiar URL</button>
+        </div>
+        <div class="url" id="url-app2" aria-live="polite"></div>
+      </article>
+
+      <!-- APP 3 – CRÉDITO -->
+      <article class="card" aria-label="Crédito">
+        <div class="card-head">
+          <div class="card-ico" aria-hidden="true">
+            <!-- Ícone cartão -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="6" width="18" height="12" rx="2"></rect>
+              <path d="M3 10h18M6 14h4"></path>
+            </svg>
+          </div>
+          <h3>Crédito</h3>
+        </div>
+        <p>Acesso a financiamento. Sem senha após onboarding (SSO).</p>
+        <div class="card-actions">
+          <button class="btn" onclick="openAuth('app3')">Entrar</button>
+          <button class="btn sec" onclick="copyUrl('app3')">Copiar URL</button>
+        </div>
+        <div class="url" id="url-app3" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <!-- ======= STATUS ======= -->
+    <section class="status" aria-label="Status e Dicas">
+      <div class="kpis">
+        <div class="kpi"><h4>Domínio do Tenant</h4><p id="k-domain" class="mono"></p></div>
+        <div class="kpi"><h4>User Flow</h4><p id="k-flow" class="mono"></p></div>
+        <div class="kpi"><h4>Redirect URI</h4><p id="k-uri" class="mono"></p></div>
+      </div>
+      <div class="tips">
+        • Não usamos <code>prompt=login</code> nas URLs (isso força novo login e quebra o SSO).<br/>
+        • Use a <strong>mesma aba</strong> para aproveitar o cookie de sessão em <code>*.ciamlogin.com</code>.<br/>
+        • Todos os apps devem estar associados ao mesmo <strong>User Flow</strong> no portal (PocRodarFlow).
+      </div>
+    </section>
+  </main>
+
+  <!-- ======= LÓGICA JS ======= -->
+  <script>
+    // ======= CONFIGURAÇÕES DA DEMO (SUBSTITUIR SE NECESSÁRIO) =======
+    const TENANT_HOST   = "irondom33.ciamlogin.com";
+    const TENANT_DOMAIN = "irondom33.onmicrosoft.com";
+    const USER_FLOW     = "PocRodarFlow";
+    const REDIRECT_URI  = "https://jwt.ms";
+
+    // Client IDs confirmados no print:
+    const CLIENT_ID_APP1 = "f7170ba0-8f71-4a82-b7f3-728f15ffd27b"; // PoC-Rodas-App (Onboarding)
+    const CLIENT_ID_APP2 = "7265df95-7b7e-47b1-8a0c-907ce989cd21"; // Rodas-App2
+    const CLIENT_ID_APP3 = "1295c81e-f12b-467f-9917-2cf7ef240bf0"; // Rodas-App3
+
+    // ======= UTILITÁRIOS =======
+    function nonce() {
+      // Gera nonce aleatório simples (suficiente para esta DEMO).
+      return Math.random().toString(36).slice(2) + "-" + crypto.getRandomValues(new Uint32Array(1))[0].toString(36);
+    }
+
+    function buildAuthUrl(clientId) {
+      // Monta URL de autorização OIDC (id_token) sem prompt=login para permitir SSO
+      const base = `https://${TENANT_HOST}/${TENANT_DOMAIN}/oauth2/v2.0/authorize`;
+      const params = new URLSearchParams({
+        p: USER_FLOW,
+        client_id: clientId,
+        nonce: nonce(),
+        redirect_uri: REDIRECT_URI,
+        scope: "openid profile",
+        response_type: "id_token"
+      });
+      return `${base}?${params.toString()}`;
+    }
+
+    function openAuth(app) {
+      const id = app === "app1" ? CLIENT_ID_APP1 : app === "app2" ? CLIENT_ID_APP2 : CLIENT_ID_APP3;
+      const url = buildAuthUrl(id);
+      // Abrir na MESMA aba para reaproveitar sessão (melhor UX na demo)
+      window.open(url, "_self");
+    }
+
+    async function copyUrl(app) {
+      const id = app === "app1" ? CLIENT_ID_APP1 : app === "app2" ? CLIENT_ID_APP2 : CLIENT_ID_APP3;
+      const url = buildAuthUrl(id);
+      try { await navigator.clipboard.writeText(url); alert("URL copiada!"); }
+      catch { alert("Copie manualmente:\n" + url); }
+      document.getElementById(`url-${app}`).textContent = url;
+    }
+
+    // Logout global (encerra sessão no tenant/policy)
+    function buildLogoutUrl() {
+      const base = `https://${TENANT_HOST}/${TENANT_DOMAIN}/oauth2/v2.0/logout`;
+      const params = new URLSearchParams({
+        p: USER_FLOW,
+        post_logout_redirect_uri: REDIRECT_URI
+      });
+      return `${base}?${params.toString()}`;
+    }
+
+    // ======= INICIALIZAÇÃO =======
+    // KPIs/Status
+    document.getElementById("k-domain").textContent = `${TENANT_HOST} / ${TENANT_DOMAIN}`;
+    document.getElementById("k-flow").textContent   = USER_FLOW;
+    document.getElementById("k-uri").textContent    = REDIRECT_URI;
+
+    // Pré-visualizar URLs sem abrir
+    document.getElementById("url-app1").textContent = buildAuthUrl(CLIENT_ID_APP1);
+    document.getElementById("url-app2").textContent = buildAuthUrl(CLIENT_ID_APP2);
+    document.getElementById("url-app3").textContent = buildAuthUrl(CLIENT_ID_APP3);
+
+    // Botões topo
+    document.getElementById("btnLogout").addEventListener("click", () => {
+      window.open(buildLogoutUrl(), "_self");
+    });
+    document.getElementById("btnCopyAll").addEventListener("click", async () => {
+      const all = [
+        buildAuthUrl(CLIENT_ID_APP1),
+        buildAuthUrl(CLIENT_ID_APP2),
+        buildAuthUrl(CLIENT_ID_APP3)
+      ].join("\n\n");
+      try { await navigator.clipboard.writeText(all); alert("Todas as URLs copiadas!"); }
+      catch { alert("Copie manualmente:\n" + all); }
+    });
+  </script>
+</body</body>
