@@ -1,5 +1,5 @@
 
-# Journey Wheels — Launcher (SSO com Microsoft Entra External ID)
+# wheeljourney — Launcher (SSO com Microsoft Entra External ID)
 
 Este projeto é um **launcher web estático** (HTML único) que demonstra:
 - **Onboarding** no aplicativo principal (**PoC-Rodas-App**) com Microsoft Entra External ID.
@@ -15,7 +15,7 @@ Este projeto é um **launcher web estático** (HTML único) que demonstra:
 ## 📁 Estrutura
 
 - `index.html` — arquivo único com:
-  - UI/UX (paleta aproximada customer blue e ícones SVG).
+  - UI/UX (paleta aproximada Banco Votorantim/BV e ícones SVG).
   - Lógica de construção das URLs `/authorize` e `/logout`.
   - Botões para **Entrar**, **Copiar URL**, **Sair**.
 
@@ -35,5 +35,3 @@ const REDIRECT_URI  = "https://jwt.ms";
 const CLIENT_ID_APP1 = "f7170ba0-8f71-4a82-b7f3-728f15ffd27b"; // PoC-Rodas-App (Onboarding)
 const CLIENT_ID_APP2 = "7265df95-7b7e-47b1-8a0c-907ce989cd21"; // Rodas-App2
 const CLIENT_ID_APP3 = "1295c81e-f12
-
-
