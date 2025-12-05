@@ -1,5 +1,5 @@
 
-# Portal Rodas — Launcher (SSO com Microsoft Entra External ID)
+# Journey Wheels — Launcher (SSO com Microsoft Entra External ID)
 
 Este projeto é um **launcher web estático** (HTML único) que demonstra:
 - **Onboarding** no aplicativo principal (**PoC-Rodas-App**) com Microsoft Entra External ID.
