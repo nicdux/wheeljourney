@@ -2,9 +2,10 @@
 <html lang="pt-BR">
   <head>
     <!--
-    Portal Rodas – Launcher (SSO com Microsoft Entra External ID)
-    - App principal (PoC-Rodas-App): onboarding (primeiro login)
-    - Submódulos (Rodas-App2, Rodas-App3): acesso via SSO após onboarding
+    Identity Journey Demo (SSO com Microsoft Entra External ID)
+    - App01: criação de conta e onboarding
+    - App02: demonstração de Single Sign-On
+    - App03: acesso sensível sujeito à política de autenticação forte
     - URLs /authorize sem prompt=login (para não forçar nova autenticação)
     - Redirect para https://jwt.ms (decodifica id_token automaticamente)
 
@@ -13,7 +14,7 @@
     - Interface com identidade visual genérica para demonstração.
   -->
     <meta charset="utf-8" />
-    <title>Portal Rodas | Ambiente Demo</title>
+    <title>Identity Journey Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- ======= IDENTIDADE VISUAL GENÉRICA ======= -->
@@ -50,6 +51,14 @@
 
       button {
         font: inherit;
+      }
+      button:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid rgba(255, 0, 0, 0.32);
+        outline-offset: 3px;
+      }
+      [hidden] {
+        display: none !important;
       }
       .page-topline {
         height: 6px;
@@ -104,6 +113,7 @@
       .actions-top {
         display: flex;
         gap: 10px;
+        align-items: center;
       }
       .btn {
         appearance: none;
@@ -172,6 +182,54 @@
         line-height: 1.55;
       }
 
+      .view-toggle {
+        display: inline-grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 4px;
+        padding: 4px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--surface-soft);
+      }
+      .view-option {
+        min-height: 38px;
+        padding: 8px 14px;
+        border: 0;
+        border-radius: 3px;
+        background: transparent;
+        color: var(--text-muted);
+        cursor: pointer;
+        font-weight: 650;
+      }
+      .view-option[aria-pressed="true"] {
+        background: var(--text);
+        color: var(--page-bg);
+      }
+
+      .benefits {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        margin-bottom: 24px;
+        border: 1px solid var(--border);
+        background: var(--border);
+      }
+      .benefit {
+        padding: 18px;
+        background: var(--surface-soft);
+      }
+      .benefit strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text);
+        font-size: 14px;
+      }
+      .benefit span {
+        color: var(--text-muted);
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
       /* ======= GRID DE APPS ======= */
       .grid {
         display: grid;
@@ -223,6 +281,14 @@
         font-size: 18px;
         letter-spacing: 0;
       }
+      .app-code {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--accent);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 11px;
+        font-weight: 700;
+      }
       .card p {
         margin: 0;
         min-height: 66px;
@@ -249,6 +315,141 @@
         font-size: 10px;
         line-height: 1.45;
         word-break: break-all;
+      }
+
+      .section-heading {
+        margin: 0 0 16px;
+        font-size: 20px;
+      }
+      .journey {
+        margin-top: 24px;
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--surface-soft);
+      }
+      .journey-list {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .journey-step {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--surface);
+      }
+      .step-number {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--accent);
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .journey-step strong {
+        display: block;
+        min-height: 42px;
+        font-size: 14px;
+        line-height: 1.4;
+      }
+      .state {
+        display: inline-block;
+        margin-top: 12px;
+        color: var(--text-muted);
+        font-size: 11px;
+        line-height: 1.4;
+      }
+      .state.requested {
+        color: var(--white);
+        font-weight: 700;
+      }
+
+      .technical-panel {
+        margin-top: 24px;
+        padding: 24px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--surface-strong);
+      }
+      .tech-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .tech-item {
+        min-width: 0;
+        padding: 14px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .tech-item dt {
+        color: var(--text-muted);
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+      .tech-item dd {
+        margin: 6px 0 0;
+        overflow-wrap: anywhere;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .technical-apps,
+      .claims {
+        margin-top: 18px;
+      }
+      details {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--surface);
+      }
+      details + details {
+        margin-top: 8px;
+      }
+      summary {
+        padding: 14px;
+        cursor: pointer;
+        font-weight: 650;
+      }
+      .detail-content {
+        padding: 0 14px 14px;
+      }
+      .detail-content .url {
+        margin-bottom: 10px;
+      }
+      .warning {
+        margin: 0 0 14px;
+        padding: 12px;
+        border-left: 3px solid var(--accent);
+        background: var(--surface-soft);
+        color: var(--text-muted);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .claims-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px 20px;
+        margin: 0;
+      }
+      .claims-list div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .claims-list dt {
+        color: var(--text-muted);
+      }
+      .claims-list dd {
+        margin: 0;
+        text-align: right;
       }
 
       /* ======= STATUS ======= */
@@ -326,6 +527,9 @@
         .card {
           min-height: 0;
         }
+        .journey-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
       @media (max-width: 720px) {
         .wrap {
@@ -341,6 +545,8 @@
         }
         .actions-top {
           width: 100%;
+          align-items: stretch;
+          flex-direction: column;
         }
         .actions-top .btn {
           flex: 1;
@@ -350,6 +556,14 @@
         }
         .kpis {
           grid-template-columns: 1fr;
+        }
+        .benefits,
+        .tech-grid,
+        .claims-list {
+          grid-template-columns: 1fr;
+        }
+        .view-toggle {
+          width: 100%;
         }
       }
       @media (max-width: 420px) {
@@ -370,6 +584,9 @@
         .card-actions .btn {
           width: 100%;
         }
+        .journey-list {
+          grid-template-columns: 1fr;
+        }
       }
       @media (prefers-reduced-motion: reduce) {
         *,
@@ -384,78 +601,90 @@
   </head>
   <body>
     <div class="page-topline" aria-hidden="true"></div>
-    <main class="wrap" role="main" aria-label="Portal Rodas – Launcher">
+    <main class="wrap" aria-label="Identity Journey Demo">
       <!-- ======= CABEÇALHO ======= -->
       <header class="header">
         <div class="brand">
-          <div class="logo" aria-label="Ambiente Demo">
-            <span class="logo-mark">DEMO</span>
+          <div class="logo" aria-hidden="true">
+            <span class="logo-mark">ID</span>
           </div>
           <div class="titles">
-            <h1>Portal Rodas</h1>
-            <p>Onboarding + SSO (Microsoft Entra External ID)</p>
+            <h1>Identity Journey Demo</h1>
+            <p>Microsoft Entra External ID guided experience</p>
           </div>
         </div>
         <div class="actions-top">
-          <!-- Logout global -->
-          <button class="btn sec" id="btnLogout">Sair</button>
-          <!-- Copiar URLs de todos os apps -->
-          <button class="btn" id="btnCopyAll">Copiar URLs</button>
+          <div class="view-toggle" role="group" aria-label="Presentation view">
+            <button
+              class="view-option"
+              id="businessView"
+              type="button"
+              aria-pressed="true"
+              aria-controls="businessBenefits technicalPanel"
+            >
+              Business View
+            </button>
+            <button
+              class="view-option"
+              id="technicalView"
+              type="button"
+              aria-pressed="false"
+              aria-controls="businessBenefits technicalPanel"
+            >
+              Technical View
+            </button>
+          </div>
+          <button class="btn sec" id="btnLogout" type="button">Sign out</button>
         </div>
       </header>
 
       <section class="intro" aria-labelledby="apps-title">
         <div>
-          <span class="eyebrow">Ambiente de acesso</span>
+          <span class="eyebrow">Guided identity experience</span>
           <h2 id="apps-title">
-            Uma jornada simples para todos os seus aplicativos.
+            Explore an identity journey across three applications.
           </h2>
         </div>
         <p>
-          Inicie pelo onboarding e continue pelos demais serviços usando a mesma
-          sessão.
+          Request authentication, reuse an expected identity session and explore
+          a policy-driven sensitive application.
         </p>
       </section>
 
-      <!-- ======= GRID DE APPS ======= -->
-      <section class="grid" aria-label="Aplicativos Rodas">
-        <!-- APP 1 – ONBOARDING (PoC-Rodas-App) -->
-        <article class="card" aria-label="Onboarding">
-          <div class="card-head">
-            <div class="card-ico" aria-hidden="true">
-              <!-- Ícone volante (Steering Wheel) -->
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fff"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M7 12h10M12 12l-3 5M12 12l3 5M12 7l0 2"></path>
-              </svg>
-            </div>
-            <h3>Onboarding (App01)</h3>
-          </div>
-          <!-- Texto mínimo: instrução simples -->
-          <p>
-            Entre aqui primeiro (CPF). Depois acesse os demais sem nova senha.
-          </p>
-          <div class="card-actions">
-            <button class="btn" onclick="openAuth('app1')">Entrar</button>
-            <button class="btn sec" onclick="copyUrl('app1')">
-              Copiar URL
-            </button>
-          </div>
-          <div class="url" id="url-app1" aria-live="polite"></div>
-        </article>
+      <section
+        class="benefits"
+        id="businessBenefits"
+        aria-label="Business benefits"
+      >
+        <div class="benefit">
+          <strong>One guided journey</strong
+          ><span
+            >Present account creation, sign-in and application access in a
+            single experience.</span
+          >
+        </div>
+        <div class="benefit">
+          <strong>Session continuity</strong
+          ><span
+            >Demonstrate the intended value of reusing an identity session
+            across applications.</span
+          >
+        </div>
+        <div class="benefit">
+          <strong>Policy-driven assurance</strong
+          ><span
+            >Explain where stronger authentication may be requested for
+            sensitive access.</span
+          >
+        </div>
+      </section>
 
-        <!-- APP 2 – ESTOQUE -->
-        <article class="card" aria-label="Estoque">
+      <section class="grid" aria-label="Demo applications">
+        <!-- APP 1 – CREATE ACCOUNT / ONBOARDING -->
+        <article class="card" aria-label="Create account or onboarding">
           <div class="card-head">
             <div class="card-ico" aria-hidden="true">
-              <!-- Ícone caixas -->
+              <!-- Generic identity icon -->
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -464,80 +693,269 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
               >
-                <path d="M12 3l8 4-8 4-8-4 8-4z"></path>
-                <path d="M4 7v6l8 4 8-4V7"></path>
+                <circle cx="12" cy="8" r="3"></circle>
+                <path d="M5 20c.8-4 3.1-6 7-6s6.2 2 7 6"></path>
               </svg>
             </div>
-            <h3>Estoque (App02)</h3>
-          </div>
-          <p>SSO ativo quando a sessão já existe no domínio do tenant.</p>
-          <div class="card-actions">
-            <button class="btn" onclick="openAuth('app2')">Entrar</button>
-            <button class="btn sec" onclick="copyUrl('app2')">
-              Copiar URL
-            </button>
-          </div>
-          <div class="url" id="url-app2" aria-live="polite"></div>
-        </article>
-
-        <!-- APP 3 – CRÉDITO -->
-        <article class="card" aria-label="Crédito">
-          <div class="card-head">
-            <div class="card-ico" aria-hidden="true">
-              <!-- Ícone cartão -->
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#fff"
-                stroke-width="1.4"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <rect x="3" y="6" width="18" height="12" rx="2"></rect>
-                <path d="M3 10h18M6 14h4"></path>
-              </svg>
+            <div>
+              <span class="app-code">App01</span>
+              <h3>Create account / Onboarding</h3>
             </div>
-            <h3>Crédito (App03)</h3>
           </div>
           <p>
-            Acesso ao Financiamento (App3) com MFA após o onboarding – esta
-            aplicação solicitará MFA no acesso.
+            Start a new identity journey or sign in with an existing account.
           </p>
           <div class="card-actions">
-            <button class="btn" onclick="openAuth('app3')">Entrar</button>
-            <button class="btn sec" onclick="copyUrl('app3')">
-              Copiar URL
+            <button
+              class="btn"
+              type="button"
+              onclick="
+                markAuthRequested();
+                openAuth('app1');
+              "
+            >
+              Open App01
             </button>
           </div>
-          <div class="url" id="url-app3" aria-live="polite"></div>
+        </article>
+
+        <!-- APP 2 – SINGLE SIGN-ON -->
+        <article class="card" aria-label="Single Sign-On application">
+          <div class="card-head">
+            <div class="card-ico" aria-hidden="true">
+              <!-- Generic application icon -->
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+                <path d="M4 9h16M9 9v11"></path>
+              </svg>
+            </div>
+            <div>
+              <span class="app-code">App02</span>
+              <h3>Single Sign-On application</h3>
+            </div>
+          </div>
+          <p>
+            Open another application using the identity session already
+            established with Microsoft Entra External ID.
+          </p>
+          <div class="card-actions">
+            <button
+              class="btn"
+              type="button"
+              onclick="
+                markAuthRequested();
+                openAuth('app2');
+              "
+            >
+              Open App02
+            </button>
+          </div>
+        </article>
+
+        <!-- APP 3 – SENSITIVE APPLICATION / MFA -->
+        <article class="card" aria-label="Sensitive application or MFA">
+          <div class="card-head">
+            <div class="card-ico" aria-hidden="true">
+              <!-- Generic shield icon -->
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                stroke-width="1.4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12 3l7 3v5c0 4.6-2.7 8-7 10-4.3-2-7-5.4-7-10V6l7-3z"
+                ></path>
+                <path d="M9 12l2 2 4-4"></path>
+              </svg>
+            </div>
+            <div>
+              <span class="app-code">App03</span>
+              <h3>Sensitive application / MFA</h3>
+            </div>
+          </div>
+          <p>
+            Request access to a sensitive application where the tenant policy
+            may require stronger authentication.
+          </p>
+          <div class="card-actions">
+            <button
+              class="btn"
+              type="button"
+              onclick="
+                markAuthRequested();
+                openAuth('app3');
+              "
+            >
+              Open App03
+            </button>
+          </div>
         </article>
       </section>
 
-      <!-- ======= STATUS ======= -->
-      <section class="status" aria-label="Status e Dicas">
-        <h2 class="status-heading">Configuração do ambiente</h2>
-        <div class="kpis">
-          <div class="kpi">
-            <h4>Domínio do Tenant</h4>
-            <p id="k-domain" class="mono"></p>
+      <section class="journey" aria-labelledby="journey-title">
+        <h2 class="section-heading" id="journey-title">
+          Guided identity journey
+        </h2>
+        <ol class="journey-list">
+          <li class="journey-step">
+            <span class="step-number">01</span
+            ><strong>Choose an application</strong
+            ><span class="state">Ready</span>
+          </li>
+          <li class="journey-step">
+            <span class="step-number">02</span
+            ><strong>Authentication requested</strong
+            ><span class="state" id="authState" aria-live="polite">Ready</span>
+          </li>
+          <li class="journey-step">
+            <span class="step-number">03</span
+            ><strong>Identity provider interaction</strong
+            ><span class="state">Not observable by this launcher</span>
+          </li>
+          <li class="journey-step">
+            <span class="step-number">04</span
+            ><strong>Identity session expected</strong
+            ><span class="state">Not observable by this launcher</span>
+          </li>
+          <li class="journey-step">
+            <span class="step-number">05</span
+            ><strong>Token issuance expected</strong
+            ><span class="state">Not observable by this launcher</span>
+          </li>
+          <li class="journey-step">
+            <span class="step-number">06</span
+            ><strong>SSO reuse expected</strong
+            ><span class="state">Not observable by this launcher</span>
+          </li>
+          <li class="journey-step">
+            <span class="step-number">07</span
+            ><strong>Strong authentication may be required</strong
+            ><span class="state">Depends on tenant policy</span>
+          </li>
+          <li class="journey-step">
+            <span class="step-number">08</span
+            ><strong>Sign-out requested</strong
+            ><span class="state" id="signOutState" aria-live="polite"
+              >Ready</span
+            >
+          </li>
+        </ol>
+      </section>
+
+      <section
+        class="technical-panel"
+        id="technicalPanel"
+        aria-labelledby="technical-title"
+        hidden
+      >
+        <h2 class="section-heading" id="technical-title">
+          Technical configuration
+        </h2>
+        <dl class="tech-grid">
+          <div class="tech-item">
+            <dt>Tenant host</dt>
+            <dd id="k-domain"></dd>
           </div>
-          <div class="kpi">
-            <h4>User Flow</h4>
-            <p id="k-flow" class="mono"></p>
+          <div class="tech-item">
+            <dt>User Flow</dt>
+            <dd id="k-flow"></dd>
           </div>
-          <div class="kpi">
-            <h4>Redirect URI</h4>
-            <p id="k-uri" class="mono"></p>
+          <div class="tech-item">
+            <dt>Redirect URI</dt>
+            <dd id="k-uri"></dd>
           </div>
+          <div class="tech-item">
+            <dt>Protocol</dt>
+            <dd>OpenID Connect</dd>
+          </div>
+          <div class="tech-item">
+            <dt>Requested scopes</dt>
+            <dd>openid profile</dd>
+          </div>
+          <div class="tech-item">
+            <dt>Response type</dt>
+            <dd>id_token</dd>
+          </div>
+        </dl>
+
+        <div class="technical-apps" aria-label="Application authorization URLs">
+          <button class="btn" id="btnCopyAll" type="button">
+            Copy all authorization URLs
+          </button>
+          <details>
+            <summary>App01 · ID <span id="masked-app1"></span></summary>
+            <div class="detail-content">
+              <div class="url" id="url-app1"></div>
+              <button class="btn sec" type="button" onclick="copyUrl('app1')">
+                Copy App01 URL
+              </button>
+            </div>
+          </details>
+          <details>
+            <summary>App02 · ID <span id="masked-app2"></span></summary>
+            <div class="detail-content">
+              <div class="url" id="url-app2"></div>
+              <button class="btn sec" type="button" onclick="copyUrl('app2')">
+                Copy App02 URL
+              </button>
+            </div>
+          </details>
+          <details>
+            <summary>App03 · ID <span id="masked-app3"></span></summary>
+            <div class="detail-content">
+              <div class="url" id="url-app3"></div>
+              <button class="btn sec" type="button" onclick="copyUrl('app3')">
+                Copy App03 URL
+              </button>
+            </div>
+          </details>
         </div>
-        <div class="tips">
-          • Não usamos <code>prompt=login</code> nas URLs (isso força novo login
-          e quebra o SSO).<br />
-          • Use a <strong>mesma aba</strong> para aproveitar o cookie de sessão
-          em <code>*.ciamlogin.com</code>.<br />
-          • Todos os apps devem estar associados ao mesmo
-          <strong>User Flow</strong> no portal (PocRodarFlow).
-        </div>
+
+        <details class="claims">
+          <summary>Example claims for demonstration</summary>
+          <div class="detail-content">
+            <p class="warning">
+              <strong>STATIC DEMO DATA.</strong> These values were not extracted
+              from an identity token.
+            </p>
+            <dl class="claims-list">
+              <div>
+                <dt>Display name</dt>
+                <dd>Alex Demo</dd>
+              </div>
+              <div>
+                <dt>Email</dt>
+                <dd>alex.demo@example.test</dd>
+              </div>
+              <div>
+                <dt>Locale</dt>
+                <dd>pt-BR</dd>
+              </div>
+              <div>
+                <dt>Country</dt>
+                <dd>Brazil</dd>
+              </div>
+              <div>
+                <dt>Demo role</dt>
+                <dd>Standard User</dd>
+              </div>
+              <div>
+                <dt>Customer type</dt>
+                <dd>Demo</dd>
+              </div>
+            </dl>
+          </div>
+        </details>
       </section>
     </main>
 
@@ -549,10 +967,10 @@
       const USER_FLOW = "PocRodarFlow";
       const REDIRECT_URI = "https://jwt.ms";
 
-      // Client IDs confirmados no print:
-      const CLIENT_ID_APP1 = "f7170ba0-8f71-4a82-b7f3-728f15ffd27b"; // PoC-Rodas-App (Onboarding)
-      const CLIENT_ID_APP2 = "7265df95-7b7e-47b1-8a0c-907ce989cd21"; // Rodas-App2
-      const CLIENT_ID_APP3 = "1259c81e-ff2b-46f7-9317-2cf7ef240bf0"; // Rodas-App3
+      // Client IDs dos três aplicativos da demonstração:
+      const CLIENT_ID_APP1 = "f7170ba0-8f71-4a82-b7f3-728f15ffd27b"; // App01
+      const CLIENT_ID_APP2 = "7265df95-7b7e-47b1-8a0c-907ce989cd21"; // App02
+      const CLIENT_ID_APP3 = "1259c81e-ff2b-46f7-9317-2cf7ef240bf0"; // App03
 
       // ======= UTILITÁRIOS =======
       function nonce() {
@@ -617,12 +1035,53 @@
         return `${base}?${params.toString()}`;
       }
 
+      // ======= APRESENTAÇÃO DA DEMO =======
+      function maskClientId(clientId) {
+        return `${clientId.slice(0, 8)}••••${clientId.slice(-4)}`;
+      }
+
+      function setView(view) {
+        const isTechnical = view === "technical";
+        document
+          .getElementById("businessView")
+          .setAttribute("aria-pressed", String(!isTechnical));
+        document
+          .getElementById("technicalView")
+          .setAttribute("aria-pressed", String(isTechnical));
+        document.getElementById("businessBenefits").hidden = isTechnical;
+        document.getElementById("technicalPanel").hidden = !isTechnical;
+      }
+
+      function enableViewKeyboard(button, view) {
+        button.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            setView(view);
+          }
+        });
+      }
+
+      function setRequestedState(elementId) {
+        const state = document.getElementById(elementId);
+        state.textContent = "Action requested";
+        state.classList.add("requested");
+      }
+
+      function markAuthRequested() {
+        setRequestedState("authState");
+      }
+
       // ======= INICIALIZAÇÃO =======
       // KPIs/Status
-      document.getElementById("k-domain").textContent =
-        `${TENANT_HOST} / ${TENANT_DOMAIN}`;
+      document.getElementById("k-domain").textContent = TENANT_HOST;
       document.getElementById("k-flow").textContent = USER_FLOW;
       document.getElementById("k-uri").textContent = REDIRECT_URI;
+      document.getElementById("masked-app1").textContent =
+        maskClientId(CLIENT_ID_APP1);
+      document.getElementById("masked-app2").textContent =
+        maskClientId(CLIENT_ID_APP2);
+      document.getElementById("masked-app3").textContent =
+        maskClientId(CLIENT_ID_APP3);
 
       // Pré-visualizar URLs sem abrir
       document.getElementById("url-app1").textContent =
@@ -632,8 +1091,15 @@
       document.getElementById("url-app3").textContent =
         buildAuthUrl(CLIENT_ID_APP3);
 
-      // Botões topo
+      // Controles da interface
+      const businessViewButton = document.getElementById("businessView");
+      const technicalViewButton = document.getElementById("technicalView");
+      businessViewButton.addEventListener("click", () => setView("business"));
+      technicalViewButton.addEventListener("click", () => setView("technical"));
+      enableViewKeyboard(businessViewButton, "business");
+      enableViewKeyboard(technicalViewButton, "technical");
       document.getElementById("btnLogout").addEventListener("click", () => {
+        setRequestedState("signOutState");
         window.open(buildLogoutUrl(), "_self");
       });
       document

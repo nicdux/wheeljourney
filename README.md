@@ -1,8 +1,10 @@
-# Wheel Journey
+# Identity Journey Demo
 
-Launcher web estático para demonstrar uma jornada de onboarding e Single Sign-On (SSO) com Microsoft Entra External ID.
+Experiência guiada e educacional para demonstrar conceitos do Microsoft Entra External ID em três aplicações web.
 
-O portal reúne três aplicações em uma única interface, reaproveitando a sessão do tenant entre os acessos. A experiência usa identidade visual genérica, dark mode permanente e layout responsivo.
+O launcher apresenta a jornada de criação de conta, o comportamento esperado de Single Sign-On (SSO) e uma aplicação sensível que pode exigir autenticação mais forte de acordo com a política do tenant. A interface usa identidade visual genérica, dark mode permanente e layout responsivo.
+
+> Este projeto é uma prova de conceito educacional. A resposta de autenticação é redirecionada para `jwt.ms`; por isso, o launcher não recebe a resposta e não consegue confirmar autenticação, sessão, emissão de token, SSO, MFA ou conclusão do logout.
 
 ## Demonstração
 
@@ -12,24 +14,55 @@ https://happy-meadow-002b01910.3.azurestaticapps.net
 
 ## Funcionalidades
 
-- Onboarding inicial pelo App01.
-- SSO entre App01, App02 e App03 usando o mesmo User Flow.
-- Solicitação de MFA no fluxo do App03, conforme a política configurada no tenant.
+- App01: **Create account / Onboarding**.
+- App02: **Single Sign-On application**.
+- App03: **Sensitive application / MFA**.
+- Alternância entre Business View e Technical View sem alterar a autenticação.
+- Jornada visual com estados limitados ao que o launcher pode observar.
+- Metadados técnicos seguros, identificadores de aplicativo mascarados e URLs expansíveis.
+- Claims fictícias e claramente identificadas como dados estáticos de demonstração.
 - Geração e exibição das URLs de autorização OpenID Connect.
 - Cópia individual ou conjunta das URLs de autenticação.
-- Logout global da sessão do tenant.
-- Redirecionamento do ID Token para `jwt.ms` durante a demonstração.
+- Solicitação de logout no endpoint do tenant.
 - Interface responsiva e acessível, com suporte a redução de movimento.
 
-## Jornada de acesso
+## Aplicações da demonstração
 
-1. O usuário seleciona **Entrar** no App01 e conclui o onboarding.
-2. O Microsoft Entra External ID cria a sessão no domínio `*.ciamlogin.com`.
-3. O usuário retorna ao portal e acessa App02 ou App03 na mesma aba.
-4. Como os aplicativos compartilham tenant e User Flow, a sessão existente permite SSO.
-5. O App03 pode solicitar MFA adicional de acordo com sua política de acesso.
+| Aplicação | Finalidade apresentada                                                                                       |
+| --------- | ------------------------------------------------------------------------------------------------------------ |
+| App01     | Iniciar uma nova jornada de identidade ou entrar com uma conta existente.                                    |
+| App02     | Abrir outra aplicação usando a sessão de identidade que se espera ter sido estabelecida no tenant.           |
+| App03     | Solicitar acesso a uma aplicação sensível, na qual a política do tenant pode exigir autenticação mais forte. |
 
-As URLs não incluem `prompt=login`, pois esse parâmetro forçaria uma nova autenticação e impediria o reaproveitamento da sessão.
+As três aplicações mantêm seus Client IDs e mapeamentos originais. As URLs não incluem `prompt=login`, preservando o comportamento de SSO da PoC.
+
+## Visualizações
+
+### Business View
+
+- Destaca os benefícios da jornada de identidade.
+- Exibe os três aplicativos e a jornada guiada.
+- Oculta tenant, User Flow, redirect URI, protocolo, scopes, response type, identificadores e URLs completas.
+
+### Technical View
+
+- Exibe apenas metadados técnicos seguros.
+- Mascara os Client IDs na interface.
+- Permite expandir e copiar as URLs de autorização existentes.
+- Inclui claims fictícias para fins de apresentação.
+
+O toggle altera somente a apresentação. Ele não modifica parâmetros, URLs, mapeamentos ou comportamento de autenticação.
+
+## Estados da jornada
+
+O launcher pode registrar apenas a intenção local iniciada por um clique:
+
+- `Ready`
+- `Action requested`
+- `Not observable by this launcher`
+- `Depends on tenant policy`
+
+Após a navegação para o provedor de identidade, todos os resultados são externos ao launcher. A interface não afirma que autenticação, sessão, token, SSO, MFA ou sign-out foram concluídos.
 
 ## Estrutura
 
@@ -42,11 +75,11 @@ As URLs não incluem `prompt=login`, pois esse parâmetro forçaria uma nova aut
 `-- README.md
 ```
 
-| Arquivo | Responsabilidade |
-| --- | --- |
-| `index.html` | Interface, dark mode, configuração do ambiente e lógica OIDC. |
-| `.github/workflows/azure-static-web-apps-happy-meadow-002b01910.yml` | Publicação automática no Azure Static Web Apps. |
-| `README.md` | Documentação funcional e operacional do projeto. |
+| Arquivo                                                              | Responsabilidade                                                                 |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `index.html`                                                         | Interface, visualizações, jornada guiada, dark mode, configuração e lógica OIDC. |
+| `.github/workflows/azure-static-web-apps-happy-meadow-002b01910.yml` | Publicação automática no Azure Static Web Apps.                                  |
+| `README.md`                                                          | Documentação funcional e operacional do projeto.                                 |
 
 O projeto não possui etapa de build nem dependências de runtime. Todo o código necessário está no `index.html`.
 
@@ -79,16 +112,27 @@ Client IDs são identificadores públicos e não concedem acesso isoladamente. N
 
 A demonstração monta uma requisição para o endpoint `/oauth2/v2.0/authorize` com os parâmetros:
 
-| Parâmetro | Valor |
-| --- | --- |
-| `p` | User Flow configurado em `USER_FLOW`. |
-| `client_id` | Client ID do aplicativo selecionado. |
-| `nonce` | Valor aleatório gerado no navegador. |
-| `redirect_uri` | `https://jwt.ms`. |
-| `scope` | `openid profile`. |
-| `response_type` | `id_token`. |
+| Parâmetro       | Valor                                 |
+| --------------- | ------------------------------------- |
+| `p`             | User Flow configurado em `USER_FLOW`. |
+| `client_id`     | Client ID do aplicativo selecionado.  |
+| `nonce`         | Valor aleatório gerado no navegador.  |
+| `redirect_uri`  | `https://jwt.ms`.                     |
+| `scope`         | `openid profile`.                     |
+| `response_type` | `id_token`.                           |
 
 O logout usa `/oauth2/v2.0/logout`, o mesmo User Flow e `post_logout_redirect_uri`.
+
+### Comportamento esperado e observabilidade
+
+O tenant processa a interação de identidade e redireciona a resposta para `jwt.ms`. O launcher apenas inicia a solicitação e, portanto:
+
+- não lê a resposta retornada;
+- não extrai, decodifica, valida, armazena ou registra tokens;
+- não confirma que uma sessão foi estabelecida;
+- não confirma que SSO ou MFA ocorreram;
+- não confirma que o logout foi concluído;
+- não afirma que `jwt.ms` valida a decisão de autorização da aplicação.
 
 ## Execução local
 
@@ -108,12 +152,12 @@ O workflow de GitHub Actions publica automaticamente no Azure Static Web Apps qu
 
 Configuração atual:
 
-| Propriedade | Valor |
-| --- | --- |
-| Branch de produção | `main` |
-| Origem da aplicação | `/` |
-| Diretório de saída | `/.` |
-| API | Não utilizada |
+| Propriedade           | Valor                                                    |
+| --------------------- | -------------------------------------------------------- |
+| Branch de produção    | `main`                                                   |
+| Origem da aplicação   | `/`                                                      |
+| Diretório de saída    | `/.`                                                     |
+| API                   | Não utilizada                                            |
 | Secret de implantação | `AZURE_STATIC_WEB_APPS_API_TOKEN_HAPPY_MEADOW_002B01910` |
 
 Pull requests direcionados ao `main` também criam ambientes de preview. O ambiente é removido quando o pull request é fechado.
@@ -126,7 +170,9 @@ gh run list --workflow "Azure Static Web Apps CI/CD"
 
 ## Limitações e segurança
 
-Este projeto é uma prova de conceito. Ele usa o fluxo implícito com `response_type=id_token` e direciona o token para `jwt.ms` exclusivamente para inspeção durante a demonstração.
+Este projeto usa o fluxo implícito com `response_type=id_token` e redireciona a resposta para `jwt.ms` exclusivamente no contexto da demonstração educacional.
+
+Client IDs são identificadores públicos, não credenciais. Mesmo assim, nunca coloque client secrets, credenciais, tokens, dados pessoais ou outros valores sensíveis no frontend, no repositório ou em logs.
 
 Para produção:
 
@@ -134,6 +180,7 @@ Para produção:
 - Valide tokens no backend ou em uma camada confiável.
 - Valide issuer, audience, assinatura, expiração e nonce.
 - Não exponha tokens, segredos ou dados pessoais em logs.
+- Não armazene nem copie tokens para o clipboard.
 - Substitua `jwt.ms` por uma URI controlada pela aplicação.
 - Configure Content Security Policy e cabeçalhos HTTP de segurança.
 
