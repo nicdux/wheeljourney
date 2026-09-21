@@ -15,7 +15,7 @@ Este projeto é um **launcher web estático** (HTML único) que demonstra:
 ## 📁 Estrutura
 
 - `index.html` — arquivo único com:
-  - UI/UX (paleta aproximada customer XX e ícones SVG).
+  - UI/UX inspirada na identidade visual da TecBan e ícones SVG.
   - Lógica de construção das URLs `/authorize` e `/logout`.
   - Botões para **Entrar**, **Copiar URL**, **Sair**.
 
