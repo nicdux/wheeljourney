@@ -14,7 +14,7 @@
     - Interface com identidade visual genérica para demonstração.
   -->
     <meta charset="utf-8" />
-    <title>Identity Journey Demo</title>
+    <title>Demonstração de Jornada de Identidade</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- ======= IDENTIDADE VISUAL GENÉRICA ======= -->
@@ -53,6 +53,7 @@
         font: inherit;
       }
       button:focus-visible,
+      select:focus-visible,
       summary:focus-visible {
         outline: 3px solid rgba(255, 0, 0, 0.32);
         outline-offset: 3px;
@@ -114,6 +115,17 @@
         display: flex;
         gap: 10px;
         align-items: center;
+      }
+      .language-select {
+        min-height: 42px;
+        padding: 9px 34px 9px 12px;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        background: var(--surface-soft);
+        color: var(--text);
+        cursor: pointer;
+        font: inherit;
+        font-weight: 650;
       }
       .btn {
         appearance: none;
@@ -614,6 +626,15 @@
           </div>
         </div>
         <div class="actions-top">
+          <select
+            class="language-select"
+            id="languageSelect"
+            aria-label="Selecionar idioma"
+          >
+            <option value="pt-BR">PT-BR</option>
+            <option value="en-US">ENG-USA</option>
+            <option value="es-ES">ES-ES</option>
+          </select>
           <div class="view-toggle" role="group" aria-label="Presentation view">
             <button
               class="view-option"
@@ -972,6 +993,356 @@
       const CLIENT_ID_APP2 = "7265df95-7b7e-47b1-8a0c-907ce989cd21"; // App02
       const CLIENT_ID_APP3 = "1259c81e-ff2b-46f7-9317-2cf7ef240bf0"; // App03
 
+      const translations = {
+        "pt-BR": {
+          pageTitle: "Demonstração de Jornada de Identidade",
+          mainLabel: "Demonstração de Jornada de Identidade",
+          title: "Demonstração de Jornada de Identidade",
+          subtitle: "Experiência guiada com Microsoft Entra External ID",
+          languageLabel: "Selecionar idioma",
+          presentationView: "Modo de apresentação",
+          businessView: "Visão de Negócio",
+          technicalView: "Visão Técnica",
+          signOut: "Sair",
+          eyebrow: "Experiência guiada de identidade",
+          introTitle: "Explore uma jornada de identidade em três aplicações.",
+          introText:
+            "Solicite autenticação, reutilize uma sessão de identidade esperada e explore uma aplicação sensível orientada por políticas.",
+          businessBenefits: "Benefícios de negócio",
+          benefitJourneyTitle: "Uma jornada guiada",
+          benefitJourneyText:
+            "Apresente criação de conta, entrada e acesso a aplicações em uma única experiência.",
+          benefitSessionTitle: "Continuidade da sessão",
+          benefitSessionText:
+            "Demonstre o valor esperado da reutilização de uma sessão de identidade entre aplicações.",
+          benefitPolicyTitle: "Garantia por políticas",
+          benefitPolicyText:
+            "Explique onde uma autenticação mais forte pode ser solicitada para acessos sensíveis.",
+          demoApplications: "Aplicações da demonstração",
+          app1Aria: "Criar conta ou integração",
+          app1Title: "Criar conta / Integração",
+          app1Text:
+            "Inicie uma nova jornada de identidade ou entre com uma conta existente.",
+          openApp1: "Abrir App01",
+          app2Aria: "Aplicação com Single Sign-On",
+          app2Title: "Aplicação com Single Sign-On",
+          app2Text:
+            "Abra outra aplicação usando a sessão de identidade já estabelecida com o Microsoft Entra External ID.",
+          openApp2: "Abrir App02",
+          app3Aria: "Aplicação sensível ou MFA",
+          app3Title: "Aplicação sensível / MFA",
+          app3Text:
+            "Solicite acesso a uma aplicação sensível em que a política do tenant pode exigir autenticação mais forte.",
+          openApp3: "Abrir App03",
+          journeyTitle: "Jornada guiada de identidade",
+          step1: "Escolha uma aplicação",
+          step2: "Autenticação solicitada",
+          step3: "Interação com o provedor de identidade",
+          step4: "Sessão de identidade esperada",
+          step5: "Emissão de token esperada",
+          step6: "Reutilização de SSO esperada",
+          step7: "Autenticação forte pode ser necessária",
+          step8: "Saída solicitada",
+          ready: "Pronto",
+          notObservable: "Não observável por este iniciador",
+          dependsPolicy: "Depende da política do tenant",
+          actionRequested: "Ação solicitada",
+          technicalTitle: "Configuração técnica",
+          tenantHost: "Host do tenant",
+          userFlow: "Fluxo de usuário",
+          redirectUri: "URI de redirecionamento",
+          protocol: "Protocolo",
+          requestedScopes: "Escopos solicitados",
+          responseType: "Tipo de resposta",
+          authorizationUrls: "URLs de autorização das aplicações",
+          copyAll: "Copiar todas as URLs de autorização",
+          copyApp1: "Copiar URL da App01",
+          copyApp2: "Copiar URL da App02",
+          copyApp3: "Copiar URL da App03",
+          claimsTitle: "Exemplo de claims para demonstração",
+          staticDataTitle: "DADOS ESTÁTICOS DE DEMONSTRAÇÃO.",
+          staticDataText:
+            "Estes valores não foram extraídos de um token de identidade.",
+          displayName: "Nome de exibição",
+          email: "E-mail",
+          locale: "Localidade",
+          country: "País",
+          countryValue: "Brasil",
+          demoRole: "Função de demonstração",
+          demoRoleValue: "Usuário padrão",
+          customerType: "Tipo de cliente",
+          customerTypeValue: "Demonstração",
+          copied: "URL copiada!",
+          copyManually: "Copie manualmente:\n",
+          allCopied: "Todas as URLs foram copiadas!",
+        },
+        "en-US": {
+          pageTitle: "Identity Journey Demo",
+          mainLabel: "Identity Journey Demo",
+          title: "Identity Journey Demo",
+          subtitle: "Microsoft Entra External ID guided experience",
+          languageLabel: "Select language",
+          presentationView: "Presentation view",
+          businessView: "Business View",
+          technicalView: "Technical View",
+          signOut: "Sign out",
+          eyebrow: "Guided identity experience",
+          introTitle: "Explore an identity journey across three applications.",
+          introText:
+            "Request authentication, reuse an expected identity session and explore a policy-driven sensitive application.",
+          businessBenefits: "Business benefits",
+          benefitJourneyTitle: "One guided journey",
+          benefitJourneyText:
+            "Present account creation, sign-in and application access in a single experience.",
+          benefitSessionTitle: "Session continuity",
+          benefitSessionText:
+            "Demonstrate the intended value of reusing an identity session across applications.",
+          benefitPolicyTitle: "Policy-driven assurance",
+          benefitPolicyText:
+            "Explain where stronger authentication may be requested for sensitive access.",
+          demoApplications: "Demo applications",
+          app1Aria: "Create account or onboarding",
+          app1Title: "Create account / Onboarding",
+          app1Text:
+            "Start a new identity journey or sign in with an existing account.",
+          openApp1: "Open App01",
+          app2Aria: "Single Sign-On application",
+          app2Title: "Single Sign-On application",
+          app2Text:
+            "Open another application using the identity session already established with Microsoft Entra External ID.",
+          openApp2: "Open App02",
+          app3Aria: "Sensitive application or MFA",
+          app3Title: "Sensitive application / MFA",
+          app3Text:
+            "Request access to a sensitive application where the tenant policy may require stronger authentication.",
+          openApp3: "Open App03",
+          journeyTitle: "Guided identity journey",
+          step1: "Choose an application",
+          step2: "Authentication requested",
+          step3: "Identity provider interaction",
+          step4: "Identity session expected",
+          step5: "Token issuance expected",
+          step6: "SSO reuse expected",
+          step7: "Strong authentication may be required",
+          step8: "Sign-out requested",
+          ready: "Ready",
+          notObservable: "Not observable by this launcher",
+          dependsPolicy: "Depends on tenant policy",
+          actionRequested: "Action requested",
+          technicalTitle: "Technical configuration",
+          tenantHost: "Tenant host",
+          userFlow: "User Flow",
+          redirectUri: "Redirect URI",
+          protocol: "Protocol",
+          requestedScopes: "Requested scopes",
+          responseType: "Response type",
+          authorizationUrls: "Application authorization URLs",
+          copyAll: "Copy all authorization URLs",
+          copyApp1: "Copy App01 URL",
+          copyApp2: "Copy App02 URL",
+          copyApp3: "Copy App03 URL",
+          claimsTitle: "Example claims for demonstration",
+          staticDataTitle: "STATIC DEMO DATA.",
+          staticDataText:
+            "These values were not extracted from an identity token.",
+          displayName: "Display name",
+          email: "Email",
+          locale: "Locale",
+          country: "Country",
+          countryValue: "United States",
+          demoRole: "Demo role",
+          demoRoleValue: "Standard User",
+          customerType: "Customer type",
+          customerTypeValue: "Demo",
+          copied: "URL copied!",
+          copyManually: "Copy manually:\n",
+          allCopied: "All URLs copied!",
+        },
+        "es-ES": {
+          pageTitle: "Demostración del Recorrido de Identidad",
+          mainLabel: "Demostración del Recorrido de Identidad",
+          title: "Demostración del Recorrido de Identidad",
+          subtitle: "Experiencia guiada con Microsoft Entra External ID",
+          languageLabel: "Seleccionar idioma",
+          presentationView: "Modo de presentación",
+          businessView: "Vista de Negocio",
+          technicalView: "Vista Técnica",
+          signOut: "Cerrar sesión",
+          eyebrow: "Experiencia guiada de identidad",
+          introTitle: "Explore un recorrido de identidad en tres aplicaciones.",
+          introText:
+            "Solicite autenticación, reutilice una sesión de identidad esperada y explore una aplicación sensible controlada por políticas.",
+          businessBenefits: "Beneficios de negocio",
+          benefitJourneyTitle: "Un recorrido guiado",
+          benefitJourneyText:
+            "Presente la creación de cuentas, el inicio de sesión y el acceso a aplicaciones en una sola experiencia.",
+          benefitSessionTitle: "Continuidad de la sesión",
+          benefitSessionText:
+            "Demuestre el valor esperado de reutilizar una sesión de identidad entre aplicaciones.",
+          benefitPolicyTitle: "Garantía basada en políticas",
+          benefitPolicyText:
+            "Explique dónde puede solicitarse una autenticación más fuerte para accesos sensibles.",
+          demoApplications: "Aplicaciones de demostración",
+          app1Aria: "Crear cuenta o incorporación",
+          app1Title: "Crear cuenta / Incorporación",
+          app1Text:
+            "Inicie un nuevo recorrido de identidad o acceda con una cuenta existente.",
+          openApp1: "Abrir App01",
+          app2Aria: "Aplicación con Single Sign-On",
+          app2Title: "Aplicación con Single Sign-On",
+          app2Text:
+            "Abra otra aplicación con la sesión de identidad ya establecida en Microsoft Entra External ID.",
+          openApp2: "Abrir App02",
+          app3Aria: "Aplicación sensible o MFA",
+          app3Title: "Aplicación sensible / MFA",
+          app3Text:
+            "Solicite acceso a una aplicación sensible donde la política del tenant puede exigir autenticación más fuerte.",
+          openApp3: "Abrir App03",
+          journeyTitle: "Recorrido guiado de identidad",
+          step1: "Elija una aplicación",
+          step2: "Autenticación solicitada",
+          step3: "Interacción con el proveedor de identidad",
+          step4: "Sesión de identidad esperada",
+          step5: "Emisión de token esperada",
+          step6: "Reutilización de SSO esperada",
+          step7: "Puede requerirse autenticación fuerte",
+          step8: "Cierre de sesión solicitado",
+          ready: "Listo",
+          notObservable: "No observable por este iniciador",
+          dependsPolicy: "Depende de la política del tenant",
+          actionRequested: "Acción solicitada",
+          technicalTitle: "Configuración técnica",
+          tenantHost: "Host del tenant",
+          userFlow: "Flujo de usuario",
+          redirectUri: "URI de redirección",
+          protocol: "Protocolo",
+          requestedScopes: "Ámbitos solicitados",
+          responseType: "Tipo de respuesta",
+          authorizationUrls: "URLs de autorización de las aplicaciones",
+          copyAll: "Copiar todas las URLs de autorización",
+          copyApp1: "Copiar URL de App01",
+          copyApp2: "Copiar URL de App02",
+          copyApp3: "Copiar URL de App03",
+          claimsTitle: "Ejemplo de claims para demostración",
+          staticDataTitle: "DATOS ESTÁTICOS DE DEMOSTRACIÓN.",
+          staticDataText:
+            "Estos valores no se extrajeron de un token de identidad.",
+          displayName: "Nombre para mostrar",
+          email: "Correo electrónico",
+          locale: "Configuración regional",
+          country: "País",
+          countryValue: "España",
+          demoRole: "Rol de demostración",
+          demoRoleValue: "Usuario estándar",
+          customerType: "Tipo de cliente",
+          customerTypeValue: "Demostración",
+          copied: "¡URL copiada!",
+          copyManually: "Copie manualmente:\n",
+          allCopied: "¡Todas las URLs fueron copiadas!",
+        },
+      };
+      const textBindings = [
+        [".titles h1", "title"],
+        [".titles p", "subtitle"],
+        ["#businessView", "businessView"],
+        ["#technicalView", "technicalView"],
+        ["#btnLogout", "signOut"],
+        [".eyebrow", "eyebrow"],
+        ["#apps-title", "introTitle"],
+        [".intro > p", "introText"],
+        [".benefit:nth-child(1) strong", "benefitJourneyTitle"],
+        [".benefit:nth-child(1) span", "benefitJourneyText"],
+        [".benefit:nth-child(2) strong", "benefitSessionTitle"],
+        [".benefit:nth-child(2) span", "benefitSessionText"],
+        [".benefit:nth-child(3) strong", "benefitPolicyTitle"],
+        [".benefit:nth-child(3) span", "benefitPolicyText"],
+        [".card:nth-child(1) h3", "app1Title"],
+        [".card:nth-child(1) > p", "app1Text"],
+        [".card:nth-child(1) .card-actions button", "openApp1"],
+        [".card:nth-child(2) h3", "app2Title"],
+        [".card:nth-child(2) > p", "app2Text"],
+        [".card:nth-child(2) .card-actions button", "openApp2"],
+        [".card:nth-child(3) h3", "app3Title"],
+        [".card:nth-child(3) > p", "app3Text"],
+        [".card:nth-child(3) .card-actions button", "openApp3"],
+        ["#journey-title", "journeyTitle"],
+        [".journey-step:nth-child(1) strong", "step1"],
+        [".journey-step:nth-child(1) .state", "ready"],
+        [".journey-step:nth-child(2) strong", "step2"],
+        [".journey-step:nth-child(2) .state", "ready"],
+        [".journey-step:nth-child(3) strong", "step3"],
+        [".journey-step:nth-child(3) .state", "notObservable"],
+        [".journey-step:nth-child(4) strong", "step4"],
+        [".journey-step:nth-child(4) .state", "notObservable"],
+        [".journey-step:nth-child(5) strong", "step5"],
+        [".journey-step:nth-child(5) .state", "notObservable"],
+        [".journey-step:nth-child(6) strong", "step6"],
+        [".journey-step:nth-child(6) .state", "notObservable"],
+        [".journey-step:nth-child(7) strong", "step7"],
+        [".journey-step:nth-child(7) .state", "dependsPolicy"],
+        [".journey-step:nth-child(8) strong", "step8"],
+        [".journey-step:nth-child(8) .state", "ready"],
+        ["#technical-title", "technicalTitle"],
+        [".tech-item:nth-child(1) dt", "tenantHost"],
+        [".tech-item:nth-child(2) dt", "userFlow"],
+        [".tech-item:nth-child(3) dt", "redirectUri"],
+        [".tech-item:nth-child(4) dt", "protocol"],
+        [".tech-item:nth-child(5) dt", "requestedScopes"],
+        [".tech-item:nth-child(6) dt", "responseType"],
+        ["#btnCopyAll", "copyAll"],
+        [".technical-apps details:nth-of-type(1) button", "copyApp1"],
+        [".technical-apps details:nth-of-type(2) button", "copyApp2"],
+        [".technical-apps details:nth-of-type(3) button", "copyApp3"],
+        ["details.claims summary", "claimsTitle"],
+        [".warning strong", "staticDataTitle"],
+        [".claims-list > div:nth-child(1) dt", "displayName"],
+        [".claims-list > div:nth-child(2) dt", "email"],
+        [".claims-list > div:nth-child(3) dt", "locale"],
+        [".claims-list > div:nth-child(3) dd", "localeValue"],
+        [".claims-list > div:nth-child(4) dt", "country"],
+        [".claims-list > div:nth-child(4) dd", "countryValue"],
+        [".claims-list > div:nth-child(5) dt", "demoRole"],
+        [".claims-list > div:nth-child(5) dd", "demoRoleValue"],
+        [".claims-list > div:nth-child(6) dt", "customerType"],
+        [".claims-list > div:nth-child(6) dd", "customerTypeValue"],
+      ];
+      const ariaBindings = [
+        ["main", "mainLabel"],
+        ["#languageSelect", "languageLabel"],
+        [".view-toggle", "presentationView"],
+        ["#businessBenefits", "businessBenefits"],
+        [".grid", "demoApplications"],
+        [".card:nth-child(1)", "app1Aria"],
+        [".card:nth-child(2)", "app2Aria"],
+        [".card:nth-child(3)", "app3Aria"],
+        [".technical-apps", "authorizationUrls"],
+      ];
+      let currentLanguage = "pt-BR";
+
+      function translatePage(language) {
+        const dictionary = translations[language] || translations["pt-BR"];
+        currentLanguage = translations[language] ? language : "pt-BR";
+        dictionary.localeValue = currentLanguage;
+        document.documentElement.lang = currentLanguage;
+        document.title = dictionary.pageTitle;
+        textBindings.forEach(([selector, key]) => {
+          document.querySelector(selector).textContent = dictionary[key];
+        });
+        ["authState", "signOutState"].forEach((elementId) => {
+          const state = document.getElementById(elementId);
+          if (state.dataset.requested === "true") {
+            state.textContent = dictionary.actionRequested;
+          }
+        });
+        document.querySelector(".warning").childNodes[2].textContent =
+          ` ${dictionary.staticDataText}`;
+        ariaBindings.forEach(([selector, key]) => {
+          document
+            .querySelector(selector)
+            .setAttribute("aria-label", dictionary[key]);
+        });
+      }
+
       // ======= UTILITÁRIOS =======
       function nonce() {
         // Gera nonce aleatório simples (suficiente para esta DEMO).
@@ -1018,9 +1389,9 @@
         const url = buildAuthUrl(id);
         try {
           await navigator.clipboard.writeText(url);
-          alert("URL copiada!");
+          alert(translations[currentLanguage].copied);
         } catch {
-          alert("Copie manualmente:\n" + url);
+          alert(translations[currentLanguage].copyManually + url);
         }
         document.getElementById(`url-${app}`).textContent = url;
       }
@@ -1063,7 +1434,8 @@
 
       function setRequestedState(elementId) {
         const state = document.getElementById(elementId);
-        state.textContent = "Action requested";
+        state.dataset.requested = "true";
+        state.textContent = translations[currentLanguage].actionRequested;
         state.classList.add("requested");
       }
 
@@ -1094,6 +1466,11 @@
       // Controles da interface
       const businessViewButton = document.getElementById("businessView");
       const technicalViewButton = document.getElementById("technicalView");
+      document
+        .getElementById("languageSelect")
+        .addEventListener("change", (event) =>
+          translatePage(event.target.value),
+        );
       businessViewButton.addEventListener("click", () => setView("business"));
       technicalViewButton.addEventListener("click", () => setView("technical"));
       enableViewKeyboard(businessViewButton, "business");
@@ -1112,11 +1489,12 @@
           ].join("\n\n");
           try {
             await navigator.clipboard.writeText(all);
-            alert("Todas as URLs copiadas!");
+            alert(translations[currentLanguage].allCopied);
           } catch {
-            alert("Copie manualmente:\n" + all);
+            alert(translations[currentLanguage].copyManually + all);
           }
         });
+      translatePage(currentLanguage);
     </script>
   </body>
 </html>
