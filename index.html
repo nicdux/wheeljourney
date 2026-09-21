@@ -19,15 +19,18 @@
     <!-- ======= IDENTIDADE VISUAL GENÉRICA ======= -->
     <style>
       :root {
+        color-scheme: dark;
         --accent: #ff0000;
         --accent-dark: #cc0000;
-        --black: #111111;
-        --graphite: #373737;
-        --gray: #686868;
-        --gray-light: #e7e7e7;
-        --surface-soft: #f5f5f3;
+        --page-bg: #0b0b0c;
+        --surface: #18181a;
+        --surface-soft: #111113;
+        --surface-strong: #050506;
+        --text: #f5f5f5;
+        --text-muted: #b7b7bc;
+        --border: #353539;
         --white: #ffffff;
-        --shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        --shadow: 0 14px 36px rgba(0, 0, 0, 0.32);
       }
 
       /* ======= RESET/BASE ======= */
@@ -41,8 +44,8 @@
         margin: 0;
         min-height: 100vh;
         font-family: "Segoe UI", Aptos, Calibri, sans-serif;
-        color: var(--black);
-        background: var(--surface-soft);
+        color: var(--text);
+        background: var(--page-bg);
       }
 
       button {
@@ -77,7 +80,7 @@
         align-items: center;
         min-height: 56px;
         padding-right: 20px;
-        border-right: 1px solid var(--gray-light);
+        border-right: 1px solid var(--border);
       }
       .logo-mark {
         color: var(--accent);
@@ -95,7 +98,7 @@
       .titles p {
         margin: 5px 0 0;
         font-size: 13px;
-        color: var(--gray);
+        color: var(--text-muted);
       }
 
       .actions-top {
@@ -129,12 +132,13 @@
       }
       .btn.sec {
         background: transparent;
-        color: var(--black);
-        border-color: var(--black);
+        color: var(--text);
+        border-color: var(--border);
       }
       .btn.sec:hover {
-        background: var(--black);
-        color: var(--white);
+        background: var(--text);
+        border-color: var(--text);
+        color: var(--page-bg);
       }
 
       .intro {
@@ -163,7 +167,7 @@
       .intro p {
         max-width: 360px;
         margin: 0 0 4px;
-        color: var(--gray);
+        color: var(--text-muted);
         font-size: 15px;
         line-height: 1.55;
       }
@@ -180,10 +184,10 @@
         min-width: 0;
         min-height: 310px;
         padding: 24px;
-        border: 1px solid var(--gray-light);
+        border: 1px solid var(--border);
         border-top: 4px solid var(--accent);
         border-radius: 6px;
-        background: var(--white);
+        background: var(--surface);
         box-shadow: var(--shadow);
         flex-direction: column;
         gap: 16px;
@@ -204,7 +208,7 @@
         width: 46px;
         height: 46px;
         border-radius: 50%;
-        background: var(--black);
+        background: var(--surface-strong);
         color: var(--white);
         display: grid;
         flex: 0 0 46px;
@@ -222,7 +226,7 @@
       .card p {
         margin: 0;
         min-height: 66px;
-        color: var(--gray);
+        color: var(--text-muted);
         font-size: 14px;
         line-height: 1.55;
       }
@@ -237,10 +241,10 @@
         max-height: 64px;
         padding: 10px;
         overflow: auto;
-        border: 1px solid var(--gray-light);
+        border: 1px solid var(--border);
         border-radius: 3px;
         background: var(--surface-soft);
-        color: var(--gray);
+        color: var(--text-muted);
         font-family: Consolas, "Courier New", monospace;
         font-size: 10px;
         line-height: 1.45;
@@ -252,8 +256,8 @@
         margin-top: 24px;
         padding: 24px;
         border-radius: 6px;
-        background: var(--black);
-        color: var(--white);
+        background: var(--surface-strong);
+        color: var(--text);
       }
       .status-heading {
         margin: 0 0 18px;
@@ -277,11 +281,11 @@
       .kpi {
         min-width: 0;
         padding: 12px 0;
-        border-top: 1px solid var(--graphite);
+        border-top: 1px solid var(--border);
       }
       .kpi h4 {
         margin: 0;
-        color: var(--gray-light);
+        color: var(--text-muted);
         font-size: 11px;
         font-weight: 500;
         text-transform: uppercase;
@@ -295,7 +299,7 @@
       }
       .tips {
         margin-top: 16px;
-        color: var(--gray-light);
+        color: var(--text-muted);
         font-size: 12px;
         line-height: 1.7;
       }
