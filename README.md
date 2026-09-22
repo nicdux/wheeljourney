@@ -72,12 +72,14 @@ Após a navegação para o provedor de identidade, todos os resultados são exte
 |   `-- workflows/
 |       `-- azure-static-web-apps-happy-meadow-002b01910.yml
 |-- index.html
+|-- staticwebapp.config.json
 `-- README.md
 ```
 
 | Arquivo                                                              | Responsabilidade                                                                 |
 | -------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `index.html`                                                         | Interface, visualizações, jornada guiada, dark mode, configuração e lógica OIDC. |
+| `staticwebapp.config.json`                                           | Cabeçalhos HTTP de segurança da aplicação publicada.                             |
 | `.github/workflows/azure-static-web-apps-happy-meadow-002b01910.yml` | Publicação automática no Azure Static Web Apps.                                  |
 | `README.md`                                                          | Documentação funcional e operacional do projeto.                                 |
 
@@ -107,6 +109,20 @@ Para usar outro ambiente:
 5. Confirme que as políticas de MFA estão associadas aos fluxos esperados.
 
 Client IDs são identificadores públicos e não concedem acesso isoladamente. Não adicione client secrets, tokens ou credenciais ao HTML.
+
+### Evolução para novos casos de uso
+
+A aplicação atual é intencionalmente estática e independente de AKS, máquinas virtuais, registros de contêiner e cofres de segredo. Novos cenários puramente demonstrativos podem reutilizar o mesmo padrão de configuração no `index.html`, desde que usem apenas identificadores públicos e endpoints de autorização.
+
+Antes de adicionar um novo caso de uso:
+
+1. Defina o objetivo observável da jornada e evite afirmar resultados que o launcher não consegue verificar.
+2. Crie ou selecione o registro de aplicativo e o User Flow no tenant de External ID.
+3. Cadastre a URI de redirecionamento exata e mantenha secrets fora do frontend e do repositório.
+4. Adicione textos equivalentes em `pt-BR`, `en-US` e `es-ES`.
+5. Preserve os headers de segurança de `staticwebapp.config.json` e valide a publicação em HTTPS.
+
+Casos que precisem receber o retorno de autenticação, validar tokens ou chamar APIs devem ser implementados como uma aplicação separada com Authorization Code Flow e PKCE. Essa evolução não deve substituir nem acoplar infraestrutura à demo estática existente.
 
 ## Protocolo de autenticação
 
